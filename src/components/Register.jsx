@@ -9,7 +9,6 @@ const Register = () => {
     name: "",
     email: "",
     password: "",
-    confirmPassword: "",
   });
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -26,13 +25,8 @@ const Register = () => {
     e.preventDefault();
     setError("");
 
-    if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match!");
-      return;
-    }
-
-    if (formData.password.length < 6) {
-      setError("Password must be at least 6 characters long!");
+    if (formData.password.length < 4) {
+      setError("Password must be at least 4 characters long!");
       return;
     }
 
@@ -106,23 +100,8 @@ const Register = () => {
                 value={formData.password}
                 onChange={handleChange}
                 required
-                placeholder="At least 6 characters"
+                placeholder="At least 4 characters"
                 className="w-full px-4 py-3 border-4 border-pink-300 rounded-lg focus:outline-none focus:ring-4 focus:ring-purple-300 focus:border-purple-500 bg-white font-semibold placeholder-pink-400"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-bold text-orange-700 mb-2">
-                Confirm Password
-              </label>
-              <input
-                type="password"
-                name="confirmPassword"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                required
-                placeholder="Re-enter your password"
-                className="w-full px-4 py-3 border-4 border-purple-300 rounded-lg focus:outline-none focus:ring-4 focus:ring-orange-300 focus:border-orange-500 bg-white font-semibold placeholder-purple-400"
               />
             </div>
 
@@ -134,7 +113,10 @@ const Register = () => {
               />
               <span className="ml-2 text-sm font-semibold text-orange-700">
                 I agree to the{" "}
-                <Link to="/terms" className="text-purple-600 hover:text-pink-600 font-bold">
+                <Link
+                  to="/terms"
+                  className="text-purple-600 hover:text-pink-600 font-bold"
+                >
                   Terms & Conditions
                 </Link>
               </span>
@@ -176,4 +158,3 @@ const Register = () => {
 };
 
 export default Register;
-

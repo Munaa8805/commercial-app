@@ -32,9 +32,9 @@ const ProductCard = ({ product }) => {
     'bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700',
   ];
 
-  const cardColor = colorClasses[(product.id - 1) % colorClasses.length];
-  const buttonColor = buttonColors[(product.id - 1) % buttonColors.length];
-  const stock = product.stock || 0;
+  const cardColor = colorClasses[(product._id - 1) % colorClasses.length];
+  const buttonColor = buttonColors[(product._id - 1) % buttonColors.length];
+  const stock = product.quantity || 0;
   const isInStock = stock > 0;
   const isLowStock = stock > 0 && stock <= 5;
 
@@ -61,11 +61,11 @@ const ProductCard = ({ product }) => {
   };
 
   return (
-    <Link to={`/product/${product.id}`} className="group">
+    <Link to={`/product/${product._id}`} className="group">
       <div className={`${cardColor} rounded-lg shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 animate-scale-in ${!isInStock ? 'opacity-75' : ''}`}>
         <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden bg-gradient-to-br from-purple-200 to-pink-200 relative">
           <img
-            src={product.image}
+            src={`https://restapi.munaa.dev${product.image}`}
             alt={product.name}
             className="h-64 w-full object-cover group-hover:scale-110 transition-transform duration-500 ease-out"
           />

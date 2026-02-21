@@ -1,51 +1,85 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 
-const AuthContext = createContext();
+const AuthContext = createContext({});
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
-  const login = (email, password) => {
+  useEffect(() => {
+    const userInfo = localStorage.getItem("user")
+      ? JSON.parse(localStorage.getItem("user"))
+      : null;
+    setUser(userInfo);
+  }, []);
+
+  const login = async (email, password) => {
     // Simulate API call - in real app, this would call your backend
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        if (email && password) {
-          const userData = {
-            email,
-            name: email.split("@")[0],
-          };
-          setUser(userData);
-          localStorage.setItem("user", JSON.stringify(userData));
-          resolve(userData);
-        } else {
-          reject(new Error("Invalid credentials"));
-        }
-      }, 1000);
-    });
+    console.log("email ", email, password);
+
+    try {
+      const response = await fetch("https://restapi.munaa.dev/api/v1/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      });
+      const responseData = await response.json();
+      // console.log("responsedata", responseData);
+      if ((responseData.status = "success")) {
+        setUser(responseData.data.user);
+        localStorage.setItem("user", JSON.stringify(responseData.data.user));
+        localStorage.setItem("e_token", responseData.token);
+      }
+    } catch (err) {
+      console.log("error login", err);
+    }
   };
 
-  const register = (name, email, password) => {
+  const register = async (name, email, password) => {
     // Simulate API call - in real app, this would call your backend
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        if (name && email && password) {
-          const userData = {
-            email,
+
+    try {
+      const response = await fetch(
+        "https://restapi.munaa.dev/api/v1/auth/register",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
             name,
-          };
-          setUser(userData);
-          localStorage.setItem("user", JSON.stringify(userData));
-          resolve(userData);
-        } else {
-          reject(new Error("Registration failed"));
-        }
-      }, 1000);
-    });
+            email,
+            password,
+          }),
+        },
+      );
+
+      const responseData = await response.json();
+      if ((responseData.status = "success")) {
+        setUser(responseData.data.user);
+
+        localStorage.setItem("user", JSON.stringify(responseData.data.user));
+        localStorage.setItem("e_token", responseData.token);
+      }
+    } catch (err) {
+      console.log("error register", err);
+    }
   };
 
-  const logout = () => {
+  const logout = async () => {
+    const response = await fetch("https://restapi.munaa.dev/api/v1/auth/logout", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
     setUser(null);
     localStorage.removeItem("user");
+    localStorage.removeItem("e_token");
   };
 
   const updateUser = (userData) => {

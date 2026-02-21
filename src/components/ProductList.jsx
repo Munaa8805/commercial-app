@@ -1,14 +1,17 @@
 import React, { useState } from "react";
 import ProductCard from "./ProductCard";
-import { products } from "../data/products";
+// import { products } from "../data/products";
+import { useProduct } from "../context/ProductContext";
 
 const ProductList = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const { products } = useProduct();
+  // console.log(products);
 
   const categories = [
     "All",
-    ...new Set(products.map((product) => product.category)),
+    ...new Set(products.map((product) => product.category.name)),
   ];
 
   const filteredProducts = products.filter((product) => {
@@ -37,8 +40,8 @@ const ProductList = () => {
                 index === 0
                   ? "rotate-12 scale-75 animation-delay-100"
                   : index === 1
-                  ? "scale-90 animation-delay-300"
-                  : "-rotate-12 scale-75 animation-delay-500"
+                    ? "scale-90 animation-delay-300"
+                    : "-rotate-12 scale-75 animation-delay-500"
               } transition-all duration-300 hover:scale-110`}
               style={{ animationDelay: `${index * 0.3}s` }}
             >
@@ -167,7 +170,7 @@ const ProductList = () => {
           </select>
         </div>
 
-        {filteredProducts.length === 0 ? (
+        {products.length === 0 ? (
           <div className="text-center py-12 bg-gradient-to-r from-purple-100 to-pink-100 rounded-lg border-4 border-purple-300">
             <p className="text-purple-700 text-lg font-semibold">
               No products found matching your criteria.
@@ -175,9 +178,9 @@ const ProductList = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {filteredProducts.map((product, index) => (
+            {products.map((product, index) => (
               <div
-                key={product.id}
+                key={product._id}
                 className="animate-slide-in-up"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
