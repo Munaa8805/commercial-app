@@ -1,14 +1,15 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
-import { products } from '../data/products';
+// import { products } from '../data/products';
+import { useProduct } from '../context/ProductContext';
 
 const ProductDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { addToCart } = useCart();
-  
-  const product = products.find(p => p.id === parseInt(id));
+  const { products } = useProduct();
+  const product = products.find(p => p._id === id);
 
   if (!product) {
     return (
@@ -42,7 +43,7 @@ const ProductDetail = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div className="bg-gradient-to-br from-purple-100 to-pink-100 rounded-lg overflow-hidden shadow-2xl border-4 border-purple-400">
           <img
-            src={product.image}
+            src={`https://restapi.munaa.dev${product.image}`}
             alt={product.name}
             className="w-full h-96 object-cover"
           />
@@ -51,7 +52,7 @@ const ProductDetail = () => {
         <div className="space-y-6 bg-gradient-to-br from-orange-50 to-yellow-50 p-6 rounded-lg border-4 border-orange-300 shadow-xl">
           <div>
             <span className="inline-block bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-1 rounded-full font-semibold mb-2">
-              {product.category}
+              {product.category.name}
             </span>
             <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mt-2">
               {product.name}
